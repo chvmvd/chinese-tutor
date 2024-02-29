@@ -11,13 +11,13 @@ const defaultSentences: Sentence[] = [
   {
     id: "381f86a4-65cb-4410-8d91-4a1437580cff",
     chineseContent: "我想学习中文。",
-    pinyinContent: "Wo3 xiang3 xue2 xi2 zhong1 wen2.",
+    pinyinContent: "Wo3 xiang3 xue2 xi2 zhong1 wen2 .",
     translationContent: "I want to learn Chinese.",
   },
   {
     id: "2645bf19-62fa-47e8-a278-9f5ecd502cd2",
     chineseContent: "你会说汉语吗？",
-    pinyinContent: "Ni3 hui4 shuo1 han4 yu3 ma?",
+    pinyinContent: "Ni3 hui4 shuo1 han4 yu3 ma ?",
     translationContent: "Can you speak Chinese?",
   },
 ];

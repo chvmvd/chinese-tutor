@@ -1,13 +1,9 @@
 import { ReactNode, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { Modal, Pressable, ScrollView, View } from "react-native";
 import {
   Button,
-  Dialog,
   IconButton,
   List,
-  Modal,
-  Portal,
-  Text,
   TextInput,
   useTheme,
 } from "react-native-paper";
@@ -88,155 +84,169 @@ export default function EdittableMultipleSelect<Item>(props: {
         right={<TextInput.Icon icon="menu-down" onPress={showSelectModal} />}
         onPressIn={showSelectModal}
       />
-      <Portal>
-        <Modal
-          visible={isSelectModalVisible}
-          onDismiss={hideSelectModal}
-          contentContainerStyle={{
-            backgroundColor: theme.colors.background,
-            padding: 12,
-            margin: 10,
-            borderRadius: 20,
+      <Modal
+        visible={isSelectModalVisible}
+        onRequestClose={hideSelectModal}
+        transparent={true}
+      >
+        <Pressable
+          onPress={hideSelectModal}
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
           }}
         >
-          <IconButton icon="close" size={20} onPress={hideSelectModal} />
-          <View style={{ gap: 12 }}>
-            <ScrollView style={{ maxHeight: 500 }}>
-              <List.Section>
-                {items.map((item) => (
+          <View
+            onStartShouldSetResponder={() => true}
+            style={{
+              width: "90%",
+              padding: 10,
+              borderRadius: 20,
+              backgroundColor: theme.colors.background,
+            }}
+          >
+            <IconButton icon="close" onPress={hideSelectModal} />
+            <View style={{ gap: 12, padding: 10 }}>
+              <ScrollView style={{ maxHeight: 500 }}>
+                <List.Section>
+                  {items.map((item) => (
+                    <List.Item
+                      key={props.keyExtractor(item)}
+                      title={props.titleExtractor(item)}
+                      onPress={() => handleToggleSelection(item)}
+                      left={(_props) => (
+                        <List.Icon
+                          {..._props}
+                          icon={
+                            selectedItems.find(
+                              (selectedItem) =>
+                                props.keyExtractor(selectedItem) ===
+                                props.keyExtractor(item)
+                            )
+                              ? "checkbox-marked"
+                              : "checkbox-blank-outline"
+                          }
+                        />
+                      )}
+                      right={() => {
+                        const [
+                          isEditItemModalVisible,
+                          setIsEditItemModalVisible,
+                        ] = useState(false);
+                        const showEditItemModal = () =>
+                          setIsEditItemModalVisible(true);
+                        const hideEditItemModal = () =>
+                          setIsEditItemModalVisible(false);
+                        const handleUpdateItem = (newItem: Item) => {
+                          setItems(
+                            items.map((item) =>
+                              props.keyExtractor(item) ===
+                              props.keyExtractor(newItem)
+                                ? newItem
+                                : item
+                            )
+                          );
+                          hideEditItemModal();
+                        };
+
+                        // const [
+                        //   isDeleteConfirmDialogVisible,
+                        //   setIsDeleteConfirmDialogVisible,
+                        // ] = useState(false);
+                        // const showDeleteConfirmDialog = () =>
+                        //   setIsDeleteConfirmDialogVisible(true);
+                        // const hideDeleteConfirmDialog = () =>
+                        //   setIsDeleteConfirmDialogVisible(false);
+
+                        const handleDeleteItem = () => {
+                          setItems(
+                            items.filter(
+                              (previousItem) =>
+                                props.keyExtractor(previousItem) !==
+                                props.keyExtractor(item)
+                            )
+                          );
+                          setSelectedItems(
+                            selectedItems.filter(
+                              (selectedItem) =>
+                                props.keyExtractor(selectedItem) !==
+                                props.keyExtractor(item)
+                            )
+                          );
+                          // hideDeleteConfirmDialog();
+                        };
+
+                        return (
+                          <View
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              alignItems: "center",
+                            }}
+                          >
+                            <IconButton
+                              icon="pencil"
+                              size={20}
+                              onPress={showEditItemModal}
+                            />
+                            {props.renderEditItemModal({
+                              visible: isEditItemModalVisible,
+                              onDismiss: hideEditItemModal,
+                              onSave: handleUpdateItem,
+                              item,
+                            })}
+                            <IconButton
+                              icon="delete"
+                              size={20}
+                              onPress={handleDeleteItem}
+                              // onPress={showDeleteConfirmDialog}
+                            />
+                            {/* <Portal>
+                              <Dialog
+                                visible={isDeleteConfirmDialogVisible}
+                                onDismiss={hideDeleteConfirmDialog}
+                              >
+                                <Dialog.Title>Delete {props.name}</Dialog.Title>
+                                <Dialog.Content>
+                                  <Text variant="bodyMedium">
+                                    Are you sure you want to delete this{" "}
+                                    {props.name}?
+                                  </Text>
+                                </Dialog.Content>
+                                <Dialog.Actions>
+                                  <Button onPress={hideDeleteConfirmDialog}>
+                                    Cancel
+                                  </Button>
+                                  <Button onPress={handleDeleteItem}>
+                                    Delete
+                                  </Button>
+                                </Dialog.Actions>
+                              </Dialog>
+                            </Portal> */}
+                          </View>
+                        );
+                      }}
+                    />
+                  ))}
                   <List.Item
-                    key={props.keyExtractor(item)}
-                    title={props.titleExtractor(item)}
-                    onPress={() => handleToggleSelection(item)}
-                    left={(_props) => (
-                      <List.Icon
-                        {..._props}
-                        icon={
-                          selectedItems.find(
-                            (selectedItem) =>
-                              props.keyExtractor(selectedItem) ===
-                              props.keyExtractor(item)
-                          )
-                            ? "checkbox-marked"
-                            : "checkbox-blank-outline"
-                        }
-                      />
-                    )}
-                    right={() => {
-                      const [
-                        isEditItemModalVisible,
-                        setIsEditItemModalVisible,
-                      ] = useState(false);
-                      const showEditItemModal = () =>
-                        setIsEditItemModalVisible(true);
-                      const hideEditItemModal = () =>
-                        setIsEditItemModalVisible(false);
-                      const handleUpdateItem = (newItem: Item) => {
-                        setItems(
-                          items.map((item) =>
-                            props.keyExtractor(item) ===
-                            props.keyExtractor(newItem)
-                              ? newItem
-                              : item
-                          )
-                        );
-                        hideEditItemModal();
-                      };
-
-                      const [
-                        isDeleteConfirmDialogVisible,
-                        setIsDeleteConfirmDialogVisible,
-                      ] = useState(false);
-                      const showDeleteConfirmDialog = () =>
-                        setIsDeleteConfirmDialogVisible(true);
-                      const hideDeleteConfirmDialog = () =>
-                        setIsDeleteConfirmDialogVisible(false);
-
-                      const handleDeleteItem = () => {
-                        setItems(
-                          items.filter(
-                            (previousItem) =>
-                              props.keyExtractor(previousItem) !==
-                              props.keyExtractor(item)
-                          )
-                        );
-                        setSelectedItems(
-                          selectedItems.filter(
-                            (selectedItem) =>
-                              props.keyExtractor(selectedItem) !==
-                              props.keyExtractor(item)
-                          )
-                        );
-                        hideDeleteConfirmDialog();
-                      };
-
-                      return (
-                        <View
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                          }}
-                        >
-                          <IconButton
-                            icon="pencil"
-                            size={20}
-                            onPress={showEditItemModal}
-                          />
-                          {props.renderEditItemModal({
-                            visible: isEditItemModalVisible,
-                            onDismiss: hideEditItemModal,
-                            onSave: handleUpdateItem,
-                            item,
-                          })}
-                          <IconButton
-                            icon="delete"
-                            size={20}
-                            onPress={showDeleteConfirmDialog}
-                          />
-                          <Portal>
-                            <Dialog
-                              visible={isDeleteConfirmDialogVisible}
-                              onDismiss={hideDeleteConfirmDialog}
-                            >
-                              <Dialog.Title>Delete {props.name}</Dialog.Title>
-                              <Dialog.Content>
-                                <Text variant="bodyMedium">
-                                  Are you sure you want to delete this{" "}
-                                  {props.name}?
-                                </Text>
-                              </Dialog.Content>
-                              <Dialog.Actions>
-                                <Button onPress={hideDeleteConfirmDialog}>
-                                  Cancel
-                                </Button>
-                                <Button onPress={handleDeleteItem}>
-                                  Delete
-                                </Button>
-                              </Dialog.Actions>
-                            </Dialog>
-                          </Portal>
-                        </View>
-                      );
-                    }}
+                    title={`Add ${props.name}`}
+                    onPress={showCreateItemModal}
+                    left={(_props) => <List.Icon {..._props} icon="plus" />}
                   />
-                ))}
-                <List.Item
-                  title={`Add ${props.name}`}
-                  onPress={showCreateItemModal}
-                  left={(_props) => <List.Icon {..._props} icon="plus" />}
-                />
-                {props.renderAddItemModal({
-                  visible: isCreateItemModalVisible,
-                  onDismiss: hideCreateItemModal,
-                  onSave: handleCreateItem,
-                })}
-              </List.Section>
-            </ScrollView>
-            <Button onPress={handleConfirm}>Confirm</Button>
+                  {props.renderAddItemModal({
+                    visible: isCreateItemModalVisible,
+                    onDismiss: hideCreateItemModal,
+                    onSave: handleCreateItem,
+                  })}
+                </List.Section>
+              </ScrollView>
+              <Button onPress={handleConfirm}>Confirm</Button>
+            </View>
           </View>
-        </Modal>
-      </Portal>
+        </Pressable>
+      </Modal>
     </>
   );
 }

@@ -27,7 +27,7 @@ const defaultConversations: Conversation[] = [
     id: "6f352674-6fdf-4742-a72d-7099d50b82d3",
     speakerIds: ["018832b2-6efb-4874-9acc-090c9c143ce1"],
     chineseContent: "你好，李四，最近怎么样？",
-    pinyinContent: "Ni3 hao3, Li3 Si4, zui4 jin4 zen3 me yang4？",
+    pinyinContent: "Ni3 hao3 , Li3 Si4 , zui4 jin4 zen3 me yang4 ？",
     translationContent: "Hello, Li Si, how have you been recently?",
   },
   {
@@ -35,7 +35,7 @@ const defaultConversations: Conversation[] = [
     speakerIds: ["cf144fb3-f778-432e-9a37-eab26f1d428d"],
     chineseContent: "你好，张三。最近挺忙的，但是我很好。你呢？",
     pinyinContent:
-      "Ni3 hao3, Zhang1 San1. Zui4 jin4 ting3 mang2 de, dan4 shi4 wo3 hen3 hao3. Ni3 ne？",
+      "Ni3 hao3 , Zhang1 San1 . Zui4 jin4 ting3 mang2 de , dan4 shi4 wo3 hen3 hao3 . Ni3 ne ？",
     translationContent:
       "Hello, Zhang San. I've been quite busy recently, but I'm doing well. How about you?",
   },
