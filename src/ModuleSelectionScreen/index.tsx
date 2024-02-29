@@ -1,17 +1,24 @@
 import { useCallback, useState } from "react";
-import { FlatList } from "react-native";
+import {
+  FlatList,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  View,
+} from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import {
   Appbar,
   Avatar,
   Button,
   Card,
-  Dialog,
   FAB,
   IconButton,
   Menu,
-  Portal,
+  Text,
   TextInput,
+  useTheme,
 } from "react-native-paper";
 import { RootStackParamList } from "../App";
 import { Module } from "../types";
@@ -25,6 +32,8 @@ function AddOrEditModuleDialog(props: {
   module: Module;
   onSave: (module: Module) => void;
 }) {
+  const theme = useTheme();
+
   const isCreate = props.module.title === "";
   const [moduleName, setModuleName] = useState(props.module.title);
 
@@ -34,22 +43,83 @@ function AddOrEditModuleDialog(props: {
   };
 
   return (
-    <Portal>
-      <Dialog visible={props.visible} onDismiss={props.onDismiss}>
-        <Dialog.Title>{isCreate ? "Add Module" : "Edit Module"}</Dialog.Title>
-        <Dialog.Content>
-          <TextInput
-            label="Name"
-            value={moduleName}
-            onChangeText={setModuleName}
-          />
-        </Dialog.Content>
-        <Dialog.Actions>
-          <Button onPress={props.onDismiss}>Cancel</Button>
-          <Button onPress={handleSave}>{isCreate ? "Add" : "Confirm"}</Button>
-        </Dialog.Actions>
-      </Dialog>
-    </Portal>
+    <Modal
+      visible={props.visible}
+      onRequestClose={props.onDismiss}
+      transparent={true}
+    >
+      <Pressable
+        onPress={props.onDismiss}
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+        }}
+      >
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{
+            width: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <View
+            onStartShouldSetResponder={() => true}
+            style={{
+              width: "90%",
+              backgroundColor: theme.colors.background,
+              padding: 10,
+              borderRadius: 20,
+            }}
+          >
+            <View style={{ padding: 10 }}>
+              <Text variant="titleLarge">
+                {isCreate ? "Add Module" : "Edit Module"}
+              </Text>
+            </View>
+            <View style={{ padding: 10 }}>
+              <TextInput
+                label="Name"
+                value={moduleName}
+                onChangeText={setModuleName}
+              />
+            </View>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                alignItems: "center",
+                padding: 10,
+              }}
+            >
+              <Button onPress={props.onDismiss}>Cancel</Button>
+              <Button onPress={handleSave}>
+                {isCreate ? "Add" : "Confirm"}
+              </Button>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </Pressable>
+    </Modal>
+    // <Portal>
+    //   <Dialog visible={props.visible} onDismiss={props.onDismiss}>
+    //     <Dialog.Title>{isCreate ? "Add Module" : "Edit Module"}</Dialog.Title>
+    //     <Dialog.Content>
+    //       <TextInput
+    //         label="Name"
+    //         value={moduleName}
+    //         onChangeText={setModuleName}
+    //       />
+    //     </Dialog.Content>
+    //     <Dialog.Actions>
+    //       <Button onPress={props.onDismiss}>Cancel</Button>
+    //       <Button onPress={handleSave}>{isCreate ? "Add" : "Confirm"}</Button>
+    //     </Dialog.Actions>
+    //   </Dialog>
+    // </Portal>
   );
 }
 
