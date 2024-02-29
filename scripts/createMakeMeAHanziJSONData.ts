@@ -28,7 +28,7 @@ async function readJsonLines(filePath: string): Promise<CharacterData[]> {
       entries.push(entry);
     } catch (error) {
       console.error(
-        `Error parsing JSON from line in file ${filePath}: ${error}`
+        `Error parsing JSON from line in file ${filePath}: ${error}`,
       );
     }
   }
@@ -38,7 +38,7 @@ async function readJsonLines(filePath: string): Promise<CharacterData[]> {
 async function mergeData(
   filePath1: string,
   filePath2: string,
-  outputPath: string
+  outputPath: string,
 ): Promise<void> {
   const data1 = await readJsonLines(filePath1);
   const data2 = await readJsonLines(filePath2);
@@ -62,8 +62,8 @@ async function mergeData(
   console.log(`Merged JSON has been written to ${outputPath}`);
 }
 
-const filePath1 = "./assets/data/makemeahanzi_dictionary.txt";
-const filePath2 = "./assets/data/makemeahanzi_graphics.txt";
-const outputPath = "./assets/data/makemeahanzi.json";
+const filePath1 = "./../app/assets/data/makemeahanzi_dictionary.txt";
+const filePath2 = "./../app/assets/data/makemeahanzi_graphics.txt";
+const outputPath = "./../app/assets/data/makemeahanzi.json";
 
 mergeData(filePath1, filePath2, outputPath).catch(console.error);

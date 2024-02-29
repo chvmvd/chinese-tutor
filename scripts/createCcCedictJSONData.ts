@@ -12,7 +12,7 @@ type CcCedictEntry = {
 
 async function convertToJSON(
   filePath: string,
-  outputPath: string
+  outputPath: string,
 ): Promise<void> {
   const fileStream = fs.createReadStream(filePath);
   const rl = readline.createInterface({
@@ -48,6 +48,6 @@ async function convertToJSON(
   console.log(`Finished writing JSON to ${outputPath}.`);
 }
 
-const filePath = "./assets/data/cc_cedict.txt";
-const outputPath = "./assets/data/cc_cedict.json";
+const filePath = "./../app/assets/data/cc_cedict.txt";
+const outputPath = "./../app/assets/data/cc_cedict.json";
 convertToJSON(filePath, outputPath).catch(console.error);
