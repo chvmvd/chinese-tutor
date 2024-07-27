@@ -1,0 +1,12 @@
+{
+  "name": "chinese-tutor",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "prettier": "^3.2.5"
+  }
+}
